@@ -1,19 +1,13 @@
-extends MarginContainer
+extends PanelContainer
 
 const ITALIC_OPEN : String = "[i][color=#85858e]"
 const ITALIC_CLOSING : String = "[/color][/i]"
 
-func _ready():
-	pass
-
-func _process(delta):
-	pass
-
-func set_message(avatar : ImageTexture, user : String, text : String = "Error loading message"):
+func set_message(size, avatar : ImageTexture, user : String, text : String = "Error loading message"):
 	$HBoxContainer/AvatarTexture.texture = avatar
 	$HBoxContainer/MessageText.bbcode_text = "[b]" + user + "[/b]\n" + adapt_text(text)
+	rect_min_size.x = size
 	
-
 func adapt_text(text : String) -> String:
 	var adapted_text : String = text
 	# Transform italic to bb_code

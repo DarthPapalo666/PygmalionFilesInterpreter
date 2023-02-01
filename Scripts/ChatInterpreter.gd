@@ -2,69 +2,50 @@ extends Node
 
 class_name ChatInterpreter
 
-func get_messages(file_path : String, UI : int, for_img : bool = false) -> Array:
-	var clean_messages : Array = []
+func get_clean_chat(file_path : String, UI : int) -> Array:
+	var clean_chat : Array = [] # Array with Arrays with this sintax: "is_user", "name" and "mes"
 	var f = File.new()
 	f.open(file_path, File.READ)
-	if UI == 0: # TavernUI
-		# Get char and user names (UNUSED RIGHT NOW)-----*
-		var user_name : String
-		var char_name : String
-		
-		var first_line = parse_json(f.get_line())
-		if typeof(first_line) == TYPE_DICTIONARY:
-			user_name = first_line["user_name"]
-			char_name = first_line["character_name"]
-		else:
-			#print("Error parsing json")
-			pass
-		# (UNUSED RIGHT NOW)-----------------------------*
-		
+	
+	if UI == 0: # TavernUI (Multiple lines)
 		var file_text = f.get_as_text() # Get all file as text
-		#file_text = file_text.c_unescape()
+
 		var lines : Array = Array(file_text.split("\n"))
 		
-		lines.pop_front() #Eliminates first line of info
+		lines.pop_front() #Eliminates first line of chat info
 		
-		for i in lines:
-			var actual_line = parse_json(i)
-			if typeof(actual_line) == TYPE_DICTIONARY:
-				if for_img == false:
-					clean_messages.append(actual_line["name"] + ": " + actual_line["mes"])
-				elif for_img == true:
-					var writer_message : Array = [] # Array with info about the writer, the name and the message
-					writer_message.append(actual_line["is_user"])
-					writer_message.append(actual_line["name"])
-					writer_message.append(actual_line["mes"])
-					clean_messages.append(writer_message)
-			else:
-				#print("Error parsing")
-				pass
-			pass
-	
-	elif UI == 1: # GradioUI
-		var json_data = parse_json(f.get_as_text())
-		
-		if for_img == false:
-			if typeof(json_data) == TYPE_DICTIONARY:
-				for i in json_data["chat"]:
-					clean_messages.append(i)
-		elif for_img == true: #Return a dictionary with is_user and mes
-			for mes in json_data["chat"]:
-				var writer_message : Array = [] # Array with info about the writer, the name and the message
-				if mes.left(5) == "You: ":
-					writer_message.append(true)
-					writer_message.append("You")
-				else:
-					var end_name_pos = mes.find(":")
-					var char_name : String = mes.left(end_name_pos)
-					writer_message.append(char_name)
-					writer_message.append(false)
+		for line in lines:
+			var parsed_line = parse_json(line)
+			
+			if typeof(parsed_line) == TYPE_DICTIONARY:
 				
-				writer_message.append(mes)
-				clean_messages.append(writer_message)
+				var message_data : Array = [] # Array with info about the writer, the name and the message
+				message_data.append(parsed_line["is_user"])
+				message_data.append(parsed_line["name"])
+				message_data.append(parsed_line["mes"])
+				
+				clean_chat.append(message_data)
 	
+	elif UI == 1: # GradioUI (One line of JSON)
+		var json_data = parse_json(f.get_as_text()) #Dictionary with "chat" key referencing "chat" Array containing all messages
+		
+		if typeof(json_data) == TYPE_DICTIONARY:
+			
+			for mes in json_data["chat"]:
+				var message_data : Array = [] # Array with this sintax: "is_user", "name" and "mes"
+				var end_name_pos = mes.find(":") # Check name
+				var sender_name : String = mes.left(end_name_pos)
+				
+				if sender_name == "You":
+					message_data.append(true)
+				else:
+					message_data.append(false)
+				message_data.append(sender_name) # Sender of the message (Name that will appear on images)
+				message_data.append(mes.right(end_name_pos + 2))
+				
+				clean_chat.append(message_data)
+				
 	f.close()
-	return clean_messages
+	return clean_chat
 	pass
 

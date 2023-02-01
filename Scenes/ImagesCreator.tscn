@@ -3,11 +3,8 @@
 [ext_resource path="res://Scripts/ImagesCreator.gd" type="Script" id=1]
 
 [node name="ImageCreator" type="ViewportContainer"]
-anchor_right = 0.421053
-anchor_bottom = 1.14286
-margin_right = -400.0
-margin_bottom = -800.002
-size_flags_vertical = 8
+margin_right = 1920.0
+size_flags_vertical = 9
 stretch = true
 script = ExtResource( 1 )
 __meta__ = {
@@ -16,6 +13,8 @@ __meta__ = {
 }
 
 [node name="Viewport" type="Viewport" parent="."]
+size = Vector2( 1920, 0 )
+size_override_stretch = true
 transparent_bg = true
 handle_input_locally = false
 hdr = false
@@ -25,8 +24,10 @@ render_target_update_mode = 3
 gui_disable_input = true
 
 [node name="MarginContainer" type="MarginContainer" parent="Viewport"]
-margin_left = 15.0
-margin_top = 20.0
+margin_left = 80.0
+margin_top = 80.0
 
 [node name="MessagesContainer" type="VBoxContainer" parent="Viewport/MarginContainer"]
+size_flags_horizontal = 3
+size_flags_vertical = 3
 custom_constants/separation = 100

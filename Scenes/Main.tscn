@@ -1,16 +1,15 @@
-[gd_scene load_steps=65 format=2]
+[gd_scene load_steps=67 format=2]
 
 [ext_resource path="res://ModernSans-Light.otf" type="DynamicFontData" id=1]
 [ext_resource path="res://Assets/folder_icon.png" type="Texture" id=2]
 [ext_resource path="res://Scripts/Main.gd" type="Script" id=3]
+[ext_resource path="res://deafault_font.tres" type="DynamicFont" id=4]
 
 [sub_resource type="StyleBoxFlat" id=1]
 bg_color = Color( 0.0745098, 0.0588235, 0.101961, 1 )
 
 [sub_resource type="StyleBoxFlat" id=2]
 bg_color = Color( 0.682353, 0.423529, 1, 0.290196 )
-corner_radius_bottom_right = 5
-corner_radius_bottom_left = 5
 
 [sub_resource type="GDScript" id=12]
 resource_name = "TopBar"
@@ -46,7 +45,7 @@ font_data = ExtResource( 1 )
 [sub_resource type="DynamicFont" id=3]
 size = 36
 outline_color = Color( 1, 0, 0, 1 )
-extra_spacing_top = 4
+extra_spacing_top = -2
 font_data = ExtResource( 1 )
 
 [sub_resource type="StyleBoxEmpty" id=4]
@@ -84,7 +83,7 @@ size = 30
 font_data = ExtResource( 1 )
 
 [sub_resource type="DynamicFont" id=51]
-size = 20
+size = 30
 font_data = ExtResource( 1 )
 
 [sub_resource type="StyleBoxFlat" id=31]
@@ -103,6 +102,10 @@ LineEdit/constants/minimum_spaces = 7
 LineEdit/styles/normal = SubResource( 31 )
 
 [sub_resource type="DynamicFont" id=27]
+size = 18
+font_data = ExtResource( 1 )
+
+[sub_resource type="DynamicFont" id=71]
 size = 18
 font_data = ExtResource( 1 )
 
@@ -156,60 +159,12 @@ expand_margin_bottom = 4.0
 [sub_resource type="StyleBoxEmpty" id=49]
 
 [sub_resource type="DynamicFont" id=50]
-size = 20
+size = 18
 font_data = ExtResource( 1 )
 
 [sub_resource type="DynamicFont" id=61]
 size = 18
 font_data = ExtResource( 1 )
-
-[sub_resource type="DynamicFont" id=56]
-size = 20
-font_data = ExtResource( 1 )
-
-[sub_resource type="StyleBoxFlat" id=57]
-bg_color = Color( 0.443137, 0.286275, 0.733333, 1 )
-corner_radius_top_left = 3
-corner_radius_top_right = 3
-corner_radius_bottom_right = 3
-corner_radius_bottom_left = 3
-expand_margin_left = 4.0
-expand_margin_right = 4.0
-expand_margin_top = 4.0
-expand_margin_bottom = 4.0
-
-[sub_resource type="StyleBoxFlat" id=58]
-bg_color = Color( 0.443137, 0.286275, 0.733333, 1 )
-corner_radius_top_left = 3
-corner_radius_top_right = 3
-corner_radius_bottom_right = 3
-corner_radius_bottom_left = 3
-expand_margin_left = 4.0
-expand_margin_right = 4.0
-expand_margin_top = 4.0
-expand_margin_bottom = 4.0
-
-[sub_resource type="StyleBoxFlat" id=59]
-bg_color = Color( 0.219608, 0.188235, 0.278431, 1 )
-corner_radius_top_left = 3
-corner_radius_top_right = 3
-corner_radius_bottom_right = 3
-corner_radius_bottom_left = 3
-expand_margin_left = 4.0
-expand_margin_right = 4.0
-expand_margin_top = 4.0
-expand_margin_bottom = 4.0
-
-[sub_resource type="StyleBoxFlat" id=60]
-bg_color = Color( 0.231373, 0.176471, 0.329412, 1 )
-corner_radius_top_left = 3
-corner_radius_top_right = 3
-corner_radius_bottom_right = 3
-corner_radius_bottom_left = 3
-expand_margin_left = 4.0
-expand_margin_right = 4.0
-expand_margin_top = 4.0
-expand_margin_bottom = 4.0
 
 [sub_resource type="DynamicFont" id=53]
 size = 23
@@ -267,10 +222,60 @@ expand_margin_right = 5.0
 expand_margin_top = 5.0
 expand_margin_bottom = 5.0
 
+[sub_resource type="StyleBoxEmpty" id=66]
+
 [sub_resource type="DynamicFont" id=62]
 size = 20
 extra_spacing_top = 12
 font_data = ExtResource( 1 )
+
+[sub_resource type="GDScript" id=67]
+resource_name = "LoadVisualizer"
+script/source = "extends CenterContainer
+
+
+#func _ready():
+#	pass
+
+
+func _process(delta):
+	if $BG/VBoxContainer/ProgressBar.value >= $BG/VBoxContainer/ProgressBar.max_value:
+		visible = false
+		$BG/VBoxContainer/ProgressBar.value = 0
+	pass
+
+func set_startup(value, text):
+	$BG/VBoxContainer/ProgressBar.max_value = value
+	$BG/VBoxContainer/Label.text = text
+
+func add_value(value):
+	$BG/VBoxContainer/ProgressBar.value += value
+"
+
+[sub_resource type="DynamicFont" id=68]
+size = 30
+extra_spacing_bottom = 16
+font_data = ExtResource( 1 )
+
+[sub_resource type="StyleBoxFlat" id=69]
+bg_color = Color( 0.529412, 0.411765, 1, 1 )
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id=70]
+bg_color = Color( 0.109804, 0.0509804, 0.384314, 1 )
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color( 0.345098, 0.168627, 0.556863, 1 )
+border_blend = true
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
 
 [sub_resource type="DynamicFont" id=26]
 size = 20
@@ -444,7 +449,7 @@ tracks/1/keys = {
 [node name="Main" type="PanelContainer"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-rect_min_size = Vector2( 950, 700 )
+rect_min_size = Vector2( 974, 700 )
 custom_styles/panel = SubResource( 1 )
 script = ExtResource( 3 )
 __meta__ = {
@@ -454,12 +459,12 @@ __meta__ = {
 }
 
 [node name="AppContainer" type="VBoxContainer" parent="."]
-margin_right = 950.0
+margin_right = 1000.0
 margin_bottom = 700.0
 custom_constants/separation = 20
 
 [node name="TopBar" type="Panel" parent="AppContainer"]
-margin_right = 950.0
+margin_right = 1000.0
 margin_bottom = 40.0
 rect_min_size = Vector2( 0, 40 )
 size_flags_horizontal = 3
@@ -474,15 +479,15 @@ alignment = 2
 
 [node name="APPNameLabel" type="Label" parent="AppContainer/TopBar/HBoxContainer"]
 margin_top = 1.0
-margin_right = 354.0
+margin_right = 367.0
 margin_bottom = 38.0
 size_flags_horizontal = 2
 custom_fonts/font = SubResource( 14 )
-text = "Pygmalion Files Interpreter"
+text = " Pygmalion Files Interpreter"
 
 [node name="CloseButton" type="Button" parent="AppContainer/TopBar/HBoxContainer"]
-margin_left = 910.0
-margin_right = 950.0
+margin_left = 960.0
+margin_right = 1000.0
 margin_bottom = 40.0
 rect_min_size = Vector2( 40, 40 )
 custom_colors/font_color_disabled = Color( 1, 0, 0, 1 )
@@ -496,7 +501,7 @@ custom_styles/pressed = SubResource( 5 )
 custom_styles/focus = SubResource( 6 )
 custom_styles/disabled = SubResource( 7 )
 custom_styles/normal = SubResource( 8 )
-text = "X"
+text = "x"
 flat = true
 clip_text = true
 __meta__ = {
@@ -505,7 +510,7 @@ __meta__ = {
 
 [node name="ChatToFilesMenu" type="MarginContainer" parent="AppContainer"]
 margin_top = 60.0
-margin_right = 950.0
+margin_right = 1000.0
 margin_bottom = 700.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -513,28 +518,27 @@ custom_constants/margin_left = 25
 
 [node name="VBoxContainer" type="VBoxContainer" parent="AppContainer/ChatToFilesMenu"]
 margin_left = 25.0
-margin_right = 950.0
+margin_right = 1000.0
 margin_bottom = 640.0
 custom_constants/separation = 10
 
 [node name="FilePathBox" type="HBoxContainer" parent="AppContainer/ChatToFilesMenu/VBoxContainer"]
-margin_right = 925.0
+margin_right = 975.0
 margin_bottom = 42.0
 custom_constants/separation = 25
 
 [node name="FileTextPath" type="LineEdit" parent="AppContainer/ChatToFilesMenu/VBoxContainer/FilePathBox"]
-margin_right = 831.0
+margin_right = 881.0
 margin_bottom = 42.0
 rect_min_size = Vector2( 0, 35 )
 size_flags_horizontal = 3
 custom_fonts/font = SubResource( 10 )
 custom_styles/normal = SubResource( 11 )
-text = "C:\\Users\\darth\\Desktop\\PygmalionAI\\ChatsBackups\\ZeroTwo1.0\\1674944352357.jsonl"
-placeholder_text = "JSONL file path here"
+placeholder_text = "Chat file path here"
 
 [node name="ButtonFileSelect" type="Button" parent="AppContainer/ChatToFilesMenu/VBoxContainer/FilePathBox"]
-margin_left = 856.0
-margin_right = 896.0
+margin_left = 906.0
+margin_right = 946.0
 margin_bottom = 42.0
 rect_min_size = Vector2( 40, 40 )
 icon = ExtResource( 2 )
@@ -542,14 +546,14 @@ flat = true
 expand_icon = true
 
 [node name="VSeparator" type="VSeparator" parent="AppContainer/ChatToFilesMenu/VBoxContainer/FilePathBox"]
-margin_left = 921.0
-margin_right = 925.0
+margin_left = 971.0
+margin_right = 975.0
 margin_bottom = 42.0
 custom_styles/separator = SubResource( 9 )
 
 [node name="FileStatus" type="Label" parent="AppContainer/ChatToFilesMenu/VBoxContainer"]
 margin_top = 52.0
-margin_right = 925.0
+margin_right = 975.0
 margin_bottom = 102.0
 rect_min_size = Vector2( 0, 50 )
 custom_colors/font_color = Color( 1, 1, 1, 1 )
@@ -558,23 +562,22 @@ text = "FIle Status..."
 
 [node name="FolderPathBox" type="HBoxContainer" parent="AppContainer/ChatToFilesMenu/VBoxContainer"]
 margin_top = 112.0
-margin_right = 925.0
+margin_right = 975.0
 margin_bottom = 154.0
 custom_constants/separation = 25
 
 [node name="FolderTextPath" type="LineEdit" parent="AppContainer/ChatToFilesMenu/VBoxContainer/FolderPathBox"]
-margin_right = 831.0
+margin_right = 881.0
 margin_bottom = 42.0
 rect_min_size = Vector2( 0, 35 )
 size_flags_horizontal = 3
 custom_fonts/font = SubResource( 10 )
 custom_styles/normal = SubResource( 11 )
-text = "C:\\Users\\darth\\Desktop\\PygmalionAI\\ChatsBackups\\TestImages"
 placeholder_text = "Export folder file path here"
 
 [node name="ButtonFolderSelect" type="Button" parent="AppContainer/ChatToFilesMenu/VBoxContainer/FolderPathBox"]
-margin_left = 856.0
-margin_right = 896.0
+margin_left = 906.0
+margin_right = 946.0
 margin_bottom = 42.0
 rect_min_size = Vector2( 40, 40 )
 icon = ExtResource( 2 )
@@ -582,14 +585,14 @@ flat = true
 expand_icon = true
 
 [node name="VSeparator" type="VSeparator" parent="AppContainer/ChatToFilesMenu/VBoxContainer/FolderPathBox"]
-margin_left = 921.0
-margin_right = 925.0
+margin_left = 971.0
+margin_right = 975.0
 margin_bottom = 42.0
 custom_styles/separator = SubResource( 9 )
 
 [node name="FolderStatus" type="Label" parent="AppContainer/ChatToFilesMenu/VBoxContainer"]
 margin_top = 164.0
-margin_right = 925.0
+margin_right = 975.0
 margin_bottom = 214.0
 rect_min_size = Vector2( 0, 50 )
 custom_colors/font_color = Color( 1, 1, 1, 1 )
@@ -598,25 +601,26 @@ text = "Folder status..."
 
 [node name="OptionsLabel" type="Label" parent="AppContainer/ChatToFilesMenu/VBoxContainer"]
 margin_top = 224.0
-margin_right = 925.0
-margin_bottom = 245.0
+margin_right = 975.0
+margin_bottom = 254.0
 custom_colors/font_color = Color( 1, 1, 1, 1 )
 custom_fonts/font = SubResource( 51 )
 text = "Export options:"
 
 [node name="Options" type="VBoxContainer" parent="AppContainer/ChatToFilesMenu/VBoxContainer"]
-margin_top = 255.0
-margin_right = 925.0
-margin_bottom = 350.0
+margin_top = 264.0
+margin_right = 975.0
+margin_bottom = 368.0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="AppContainer/ChatToFilesMenu/VBoxContainer/Options"]
-margin_right = 925.0
-margin_bottom = 21.0
+margin_right = 975.0
+margin_bottom = 30.0
 custom_constants/separation = 37
 
 [node name="MsgPerImg" type="HBoxContainer" parent="AppContainer/ChatToFilesMenu/VBoxContainer/Options/HBoxContainer"]
+margin_top = 5.0
 margin_right = 177.0
-margin_bottom = 20.0
+margin_bottom = 25.0
 size_flags_vertical = 4
 
 [node name="SpinBox" type="SpinBox" parent="AppContainer/ChatToFilesMenu/VBoxContainer/Options/HBoxContainer/MsgPerImg"]
@@ -639,10 +643,38 @@ margin_bottom = 19.0
 custom_fonts/font = SubResource( 27 )
 text = "Msgs per image"
 
-[node name="TypeOfUI" type="HBoxContainer" parent="AppContainer/ChatToFilesMenu/VBoxContainer/Options/HBoxContainer"]
+[node name="ImgWidth" type="HBoxContainer" parent="AppContainer/ChatToFilesMenu/VBoxContainer/Options/HBoxContainer"]
 margin_left = 214.0
-margin_right = 766.0
-margin_bottom = 21.0
+margin_right = 402.0
+margin_bottom = 30.0
+size_flags_vertical = 4
+
+[node name="SpinBox" type="SpinBox" parent="AppContainer/ChatToFilesMenu/VBoxContainer/Options/HBoxContainer/ImgWidth"]
+margin_right = 50.0
+margin_bottom = 30.0
+rect_min_size = Vector2( 50, 30 )
+size_flags_horizontal = 8
+size_flags_vertical = 8
+theme = SubResource( 32 )
+min_value = 1024.0
+max_value = 1920.0
+step = 10.0
+value = 1920.0
+align = 1
+
+[node name="Label" type="Label" parent="AppContainer/ChatToFilesMenu/VBoxContainer/Options/HBoxContainer/ImgWidth"]
+margin_left = 54.0
+margin_top = 6.0
+margin_right = 188.0
+margin_bottom = 24.0
+custom_fonts/font = SubResource( 71 )
+text = "Image width (px)"
+
+[node name="TypeOfUI" type="HBoxContainer" parent="AppContainer/ChatToFilesMenu/VBoxContainer/Options/HBoxContainer"]
+margin_left = 439.0
+margin_top = 4.0
+margin_right = 949.0
+margin_bottom = 25.0
 size_flags_vertical = 4
 
 [node name="OptionButton" type="OptionButton" parent="AppContainer/ChatToFilesMenu/VBoxContainer/Options/HBoxContainer/TypeOfUI"]
@@ -667,15 +699,16 @@ custom_styles/separator = SubResource( 49 )
 
 [node name="Label" type="Label" parent="AppContainer/ChatToFilesMenu/VBoxContainer/Options/HBoxContainer/TypeOfUI"]
 margin_left = 175.0
-margin_right = 552.0
-margin_bottom = 21.0
+margin_top = 1.0
+margin_right = 510.0
+margin_bottom = 19.0
 custom_fonts/font = SubResource( 50 )
 text = "Select the UI you used to export the chat."
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="AppContainer/ChatToFilesMenu/VBoxContainer/Options"]
-margin_top = 25.0
-margin_right = 925.0
-margin_bottom = 95.0
+margin_top = 34.0
+margin_right = 975.0
+margin_bottom = 104.0
 custom_constants/separation = 38
 
 [node name="CharacterAvatarContainer" type="HBoxContainer" parent="AppContainer/ChatToFilesMenu/VBoxContainer/Options/HBoxContainer2"]
@@ -737,36 +770,43 @@ rect_min_size = Vector2( 50, 70 )
 expand = true
 stretch_mode = 6
 
-[node name="ToggleWatermark" type="HBoxContainer" parent="AppContainer/ChatToFilesMenu/VBoxContainer/Options/HBoxContainer2"]
-visible = false
+[node name="ImgQuality" type="HBoxContainer" parent="AppContainer/ChatToFilesMenu/VBoxContainer/Options/HBoxContainer2"]
 margin_left = 620.0
-margin_top = 19.0
-margin_right = 883.0
-margin_bottom = 51.0
+margin_top = 25.0
+margin_right = 772.0
+margin_bottom = 45.0
 size_flags_vertical = 4
 
-[node name="OptionButton" type="CheckButton" parent="AppContainer/ChatToFilesMenu/VBoxContainer/Options/HBoxContainer2/ToggleWatermark"]
-margin_right = 263.0
-margin_bottom = 32.0
-custom_fonts/font = SubResource( 56 )
-custom_styles/hover = SubResource( 57 )
-custom_styles/pressed = SubResource( 58 )
-custom_styles/disabled = SubResource( 59 )
-custom_styles/normal = SubResource( 60 )
-pressed = true
-text = "Watermark on images"
+[node name="SpinBox" type="SpinBox" parent="AppContainer/ChatToFilesMenu/VBoxContainer/Options/HBoxContainer2/ImgQuality"]
+margin_right = 44.0
+margin_bottom = 20.0
+rect_min_size = Vector2( 0, 20 )
+size_flags_horizontal = 8
+size_flags_vertical = 8
+theme = SubResource( 32 )
+min_value = 10.0
+value = 100.0
+align = 1
+
+[node name="Label" type="Label" parent="AppContainer/ChatToFilesMenu/VBoxContainer/Options/HBoxContainer2/ImgQuality"]
+margin_left = 48.0
+margin_top = 1.0
+margin_right = 152.0
+margin_bottom = 19.0
+custom_fonts/font = SubResource( 27 )
+text = "Image quality"
 
 [node name="ErrorLabel" type="Label" parent="AppContainer/ChatToFilesMenu/VBoxContainer"]
-margin_top = 360.0
-margin_right = 925.0
-margin_bottom = 433.0
+margin_top = 378.0
+margin_right = 975.0
+margin_bottom = 451.0
 custom_colors/font_color = Color( 0.839216, 0, 0, 1 )
 custom_fonts/font = SubResource( 53 )
 
 [node name="HBoxContainer" type="HBoxContainer" parent="AppContainer/ChatToFilesMenu/VBoxContainer"]
-margin_top = 443.0
-margin_right = 925.0
-margin_bottom = 473.0
+margin_top = 461.0
+margin_right = 975.0
+margin_bottom = 491.0
 
 [node name="VSeparator" type="VSeparator" parent="AppContainer/ChatToFilesMenu/VBoxContainer/HBoxContainer"]
 margin_right = 72.0
@@ -803,15 +843,66 @@ custom_styles/disabled = SubResource( 44 )
 custom_styles/normal = SubResource( 34 )
 text = "Export Chat to txt!"
 
+[node name="HSeparator" type="HSeparator" parent="AppContainer/ChatToFilesMenu/VBoxContainer"]
+margin_top = 501.0
+margin_right = 975.0
+margin_bottom = 511.0
+custom_constants/separation = 10
+custom_styles/separator = SubResource( 66 )
+
 [node name="ExportButtonsInfo" type="Label" parent="AppContainer/ChatToFilesMenu/VBoxContainer"]
-margin_top = 483.0
-margin_right = 925.0
-margin_bottom = 588.0
+margin_top = 521.0
+margin_right = 975.0
+margin_bottom = 626.0
 custom_colors/font_color = Color( 1, 1, 1, 1 )
 custom_fonts/font = SubResource( 62 )
 text = "Avatars are required to export the images. (Recommended size : 400x600)
 For text you just need a valid chat file.
 Its important to set the UI correctly as each one exports chats differently."
+
+[node name="LoadVisualizer" type="CenterContainer" parent="AppContainer/ChatToFilesMenu"]
+visible = false
+margin_left = 25.0
+margin_right = 1000.0
+margin_bottom = 640.0
+script = SubResource( 67 )
+
+[node name="BG" type="ColorRect" parent="AppContainer/ChatToFilesMenu/LoadVisualizer"]
+margin_left = 237.0
+margin_top = 120.0
+margin_right = 737.0
+margin_bottom = 520.0
+rect_min_size = Vector2( 500, 400 )
+mouse_filter = 2
+color = Color( 0.231373, 0.0980392, 0.364706, 0.854902 )
+
+[node name="VBoxContainer" type="VBoxContainer" parent="AppContainer/ChatToFilesMenu/LoadVisualizer/BG"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -250.0
+margin_top = -50.0
+margin_right = 250.0
+margin_bottom = 50.0
+
+[node name="Label" type="Label" parent="AppContainer/ChatToFilesMenu/LoadVisualizer/BG/VBoxContainer"]
+margin_right = 500.0
+margin_bottom = 46.0
+custom_fonts/font = SubResource( 68 )
+text = "Loading text"
+align = 1
+
+[node name="ProgressBar" type="ProgressBar" parent="AppContainer/ChatToFilesMenu/LoadVisualizer/BG/VBoxContainer"]
+margin_top = 50.0
+margin_right = 500.0
+margin_bottom = 100.0
+rect_min_size = Vector2( 450, 50 )
+mouse_filter = 2
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+custom_fonts/font = ExtResource( 4 )
+custom_styles/fg = SubResource( 69 )
+custom_styles/bg = SubResource( 70 )
 
 [node name="FileDialog" type="FileDialog" parent="."]
 margin_right = 896.0

@@ -1,9 +1,50 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://ChatFonts/calibril.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://ChatFonts/calibrili.ttf" type="DynamicFontData" id=2]
 [ext_resource path="res://Scripts/Message.gd" type="Script" id=3]
 [ext_resource path="res://ChatFonts/calibrib.ttf" type="DynamicFontData" id=4]
+
+[sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 0.101961, 0.105882, 0.184314, 1 )
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+expand_margin_left = 40.0
+expand_margin_right = 40.0
+expand_margin_top = 40.0
+expand_margin_bottom = 40.0
+shadow_color = Color( 0, 0, 0, 0.270588 )
+shadow_size = 4
+shadow_offset = Vector2( 1, 1 )
+
+[sub_resource type="Shader" id=5]
+code = "shader_type canvas_item;
+render_mode blend_mix,unshaded;
+
+uniform vec4 color : hint_color = vec4(1.0, 1.0, 1.0, 1.0);
+
+uniform float radius : hint_range(0.0, 1.0) = 0.2;
+uniform vec2 size = vec2(0.8, 1.0);
+
+void fragment() {
+	vec4 texture_color = texture(TEXTURE, UV);
+	COLOR = texture_color * color;
+	
+	vec2 size_ratio = vec2(max(1.0, size.x / size.y), max(1.0, size.y / size.x));
+	float half_radius = 0.5 * radius;
+	vec2 dist_max = half_radius / size_ratio;
+	vec2 edge_pos = clamp(UV, dist_max, 1.0 - dist_max);
+	float edge_dist = distance(UV * size_ratio, edge_pos * size_ratio);
+	COLOR.a *= step(edge_dist, half_radius + 0.000001);
+}"
+
+[sub_resource type="ShaderMaterial" id=6]
+shader = SubResource( 5 )
+shader_param/color = Color( 1, 1, 1, 1 )
+shader_param/radius = 0.2
+shader_param/size = Vector2( 0.8, 1 )
 
 [sub_resource type="DynamicFont" id=2]
 size = 70
@@ -23,42 +64,43 @@ extra_spacing_top = 5
 extra_spacing_bottom = 5
 font_data = ExtResource( 1 )
 
-[sub_resource type="StyleBoxFlat" id=1]
-bg_color = Color( 0.101961, 0.105882, 0.184314, 1 )
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
-expand_margin_left = 6.0
-expand_margin_right = 6.0
-expand_margin_top = 6.0
-expand_margin_bottom = 13.0
-shadow_color = Color( 0, 0, 0, 0.270588 )
-shadow_size = 4
-shadow_offset = Vector2( 1, 1 )
-
-[node name="Message" type="MarginContainer"]
+[node name="Message" type="PanelContainer"]
+anchor_right = 1.92
+anchor_bottom = 0.857143
+margin_right = -1460.0
+rect_min_size = Vector2( 1920, 0 )
+size_flags_horizontal = 3
+custom_styles/panel = SubResource( 1 )
 script = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": true
+}
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
-margin_right = 2324.0
+margin_right = 1920.0
 margin_bottom = 600.0
+size_flags_horizontal = 3
+custom_constants/separation = 60
 
 [node name="AvatarTexture" type="TextureRect" parent="HBoxContainer"]
-margin_right = 400.0
-margin_bottom = 600.0
-rect_min_size = Vector2( 400, 600 )
+show_behind_parent = true
+material = SubResource( 6 )
+margin_right = 225.0
+margin_bottom = 338.0
+rect_min_size = Vector2( 225, 338 )
 size_flags_vertical = 0
 expand = true
+__meta__ = {
+"_edit_use_anchors_": true
+}
 
 [node name="MessageText" type="RichTextLabel" parent="HBoxContainer"]
-margin_left = 404.0
-margin_right = 2324.0
+margin_left = 285.0
+margin_right = 1920.0
 margin_bottom = 73.0
-rect_min_size = Vector2( 1920, 0 )
 rect_clip_content = false
-size_flags_horizontal = 2
-size_flags_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
 custom_constants/line_separation = -8
 custom_fonts/italics_font = SubResource( 2 )
 custom_fonts/bold_font = SubResource( 4 )
@@ -67,14 +109,7 @@ bbcode_enabled = true
 text = "TEST MESSAGE"
 fit_content_height = true
 scroll_active = false
+deselect_on_focus_loss_enabled = false
 __meta__ = {
 "_edit_use_anchors_": true
 }
-
-[node name="MessageBG" type="Panel" parent="."]
-show_behind_parent = true
-margin_right = 2324.0
-margin_bottom = 600.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-custom_styles/panel = SubResource( 1 )

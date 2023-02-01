@@ -3,6 +3,8 @@ extends PanelContainer
 onready var Dir := Directory.new()
 onready var CI := ChatInterpreter.new()
 
+onready var load_visualizer = $AppContainer/ChatToFilesMenu/LoadVisualizer
+
 onready var file_path_node = $AppContainer/ChatToFilesMenu/VBoxContainer/FilePathBox/FileTextPath
 onready var folder_path_node = $AppContainer/ChatToFilesMenu/VBoxContainer/FolderPathBox/FolderTextPath
 
@@ -17,7 +19,8 @@ onready var export_info_label = $AppContainer/ChatToFilesMenu/VBoxContainer/Expo
 # Export Options
 onready var msg_per_image = $AppContainer/ChatToFilesMenu/VBoxContainer/Options/HBoxContainer/MsgPerImg/SpinBox
 onready var type_of_ui = $AppContainer/ChatToFilesMenu/VBoxContainer/Options/HBoxContainer/TypeOfUI/OptionButton
-onready var watermark = $AppContainer/ChatToFilesMenu/VBoxContainer/Options/HBoxContainer2/ToggleWatermark/OptionButton
+onready var img_quality = $AppContainer/ChatToFilesMenu/VBoxContainer/Options/HBoxContainer2/ImgQuality/SpinBox
+onready var img_width = $AppContainer/ChatToFilesMenu/VBoxContainer/Options/HBoxContainer/ImgWidth/SpinBox
 
 onready var error_label = $AppContainer/ChatToFilesMenu/VBoxContainer/ErrorLabel
 
@@ -39,6 +42,10 @@ func _ready():
 	$AvatarDialog.add_filter("*.jpg ; jpg files")
 	$FileDialog.add_filter("*.jsonl ; JSONL files")
 	$FileDialog.add_filter("*.json ; JSON files")
+	
+	# Conect image generation signals
+	ImagesCreator.connect("amount_will_generate", self, "start_loading_screen")
+	ImagesCreator.connect("image_generated", self, "load_step")
 	pass
 
 func _process(delta):
@@ -90,7 +97,8 @@ func _process(delta):
 	# Update export options
 	export_options["MsgPerCap"] = msg_per_image.value
 	export_options["UI"] = type_of_ui.selected
-	export_options["Watermark"] = watermark.pressed
+	export_options["ImgQuality"] = img_quality.value
+	export_options["ImgWidth"] = img_width.value
 	
 	pass
 
@@ -161,15 +169,32 @@ func _on_AvatarDialog_file_selected(path): # On image selected
 		$AnimationPlayer.play("FlashError")
 	pass
 
+
+# Loader functions
+func start_loading_screen(final_value, text):
+	load_visualizer.set_startup(final_value, text)
+	load_visualizer.visible = true
+	pass
+
+func load_step(quantity):
+	load_visualizer.add_value(quantity)
+	pass
+
+
 # EXPORTING CHATS FUNCTIONS
-# Exporting as txt
-func _on_ExportTextButton_pressed():
+func is_export_available() -> bool:
 	if (file_path_node.text.get_extension() == "jsonl" and export_options["UI"] == 0) or (file_path_node.text.get_extension() == "json" and export_options["UI"] == 1):
-		$ChooseNamePopup.popup_centered(Vector2(250, 125))
 		error_label.text = ""
+		return true
 	else:
 		error_label.text = "ERROR: file can't be exported (Check the UI selected)"
 		$AnimationPlayer.play("FlashError")
+		return false
+
+# Exporting as txt
+func _on_ExportTextButton_pressed():
+	if is_export_available():
+		$ChooseNamePopup.popup_centered(Vector2(250, 125))
 	pass
 
 func _on_AcceptName_pressed():
@@ -185,17 +210,17 @@ func _on_AcceptName_pressed():
 func save_chat_as_txt(path : String, UI : int, blank_between_msg : bool = true):
 	var f = File.new()
 	f.open(path, File.WRITE)
-	var messages_lines : Array
+	var clean_chat : Array
 	
 	if UI != -1: # TavernUI or GradioUI
-		messages_lines = CI.get_messages(file_path_node.text, UI)
+		clean_chat = CI.get_clean_chat(file_path_node.text, UI)
 	elif UI == -1: #No UI selected
 		$AlertDialog.dialog_text = "Select a UI on the export options."
 		$AlertDialog.popup_centered(Vector2(250, 150))
 	
 	# Write file
-	for i in messages_lines:
-		f.store_line(i)
+	for i in clean_chat:
+		f.store_line(i[1] + ": " + i[2])
 		if blank_between_msg:
 			f.store_line("\n")
 	
@@ -205,11 +230,12 @@ func save_chat_as_txt(path : String, UI : int, blank_between_msg : bool = true):
 
 # Exporting as img
 func _on_ExportImgButton_pressed():
-	save_chat_to_img()
+	if is_export_available():
+		save_chat_to_img()
 	pass
 
 func save_chat_to_img() -> void:
 	# Get message and "is_user" in an array
-	var messages : Array = CI.get_messages(file_path_node.text, export_options["UI"], true)
-	ImagesCreator.generate_images(messages, export_options["MsgPerCap"], user_avatar.texture, character_avatar.texture, folder_path_node.text, export_options["Watermark"])
+	var clean_chat : Array = CI.get_clean_chat(file_path_node.text, export_options["UI"])
+	ImagesCreator.generate_images(clean_chat, export_options["MsgPerCap"], user_avatar.texture, character_avatar.texture, folder_path_node.text, export_options["ImgQuality"], export_options["ImgWidth"])
 	pass
