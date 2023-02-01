@@ -1,5 +1,5 @@
 # PygmalionFilesInterpreter
-PFI (Pygmalion Files Interpreter) can read different types of files from exported chats involved with PygmalionAI.
+PFI (Pygmalion Files Interpreter) can read different types of files from exported chats involved with PygmalionAI. Currently for windows only.
 
 It is developed in Godot, feel free to download and make any changes as you wish.
 I will keep updating it until a fully usable and stable version is available.
